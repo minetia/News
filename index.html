@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>News</title>
+    <title>News Feed</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -18,25 +18,25 @@
             --card-bg: #ffffff;
             --text-main: #1a202c;
             --text-sub: #718096;
-            --accent: #c0392b; /* News Red */
+            --accent: #c0392b; 
             --biz-gradient: linear-gradient(135deg, #c0392b 0%, #8e44ad 100%);
-            --header-offset: 185px; /* 상단 메뉴 유지로 높이 복구 */
+            --header-total-height: 185px; 
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Outfit', "Noto Sans SC", sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
-            padding-bottom: 80px; /* 하단 탭 공간 확보 */
+            padding-bottom: 80px; 
             overscroll-behavior-y: none;
-            -webkit-user-select: none; /* 앱처럼 텍스트 선택 방지 */
             user-select: none;
+            -webkit-user-select: none;
         }
 
-        /* Ticker */
+        /* [Ticker] */
         .ticker-wrap {
             position: fixed; top: 0; left: 0; width: 100%; height: 30px;
-            background: #1a1a1a; color: #fff; z-index: 2100;
+            background: #1a1a1a; color: #fff; z-index: 2000; /* 헤더와 동일 레벨 */
             overflow: hidden; line-height: 30px; font-size: 0.8rem;
             border-bottom: 1px solid #333;
         }
@@ -46,38 +46,34 @@
         .up { color: #f87171; } .down { color: #60a5fa; }
         @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-        /* Header */
+        /* [Header] */
         header {
             position: fixed; top: 30px; left: 0; width: 100%; z-index: 2000;
             background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid #e2e8f0;
             display: flex; flex-direction: column; align-items: center;
+            height: 155px;
+            transition: opacity 0.3s;
         }
         .header-inner { width: 100%; max-width: 1400px; }
         .header-top { padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; }
-        
         .logo-area { display: flex; align-items: center; gap: 6px; cursor: pointer; }
         .logo-icon { font-size: 1.4rem; background: var(--biz-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .logo-text { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.5px; color: #1a202c; }
         .category-badge { background: #1a202c; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: bold; text-transform: uppercase; }
-
         .header-actions { display: flex; align-items: center; gap: 10px; }
         .notification-wrap { position: relative; font-size: 20px; color: #374151; cursor: pointer; }
         .notification-wrap.alert { animation: bellShake 0.5s ease-in-out infinite; color: var(--accent); }
         .red-dot { position: absolute; top: 0; right: 0; width: 7px; height: 7px; background: var(--accent); border-radius: 50%; border: 1px solid #fff; display: none; }
         @keyframes bellShake { 0% { transform: rotate(0); } 25% { transform: rotate(15deg); } 50% { transform: rotate(0); } 75% { transform: rotate(-15deg); } 100% { transform: rotate(0); } }
-
         .lang-selector { border: 1px solid #cbd5e0; padding: 4px 8px; border-radius: 6px; background: #fff; font-size: 0.75rem; font-weight: 700; color: #374151; cursor: pointer; outline: none; }
 
-        /* 상단 메뉴바 (Stories) */
         .stories-container { width: 100%; border-bottom: 1px solid #e2e8f0; background: #fff; display: flex; justify-content: center; }
         .story-scroll-view { width: 100%; max-width: 1400px; overflow-x: auto; white-space: nowrap; -ms-overflow-style: none; scrollbar-width: none; padding: 10px 0; }
-        .story-scroll-view::-webkit-scrollbar { display: none; }
         .story-wrapper { display: inline-flex; gap: 15px; padding: 0 15px; }
         .story-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.1s; }
         .story-item:hover { transform: translateY(-3px); }
-        
         .story-ring { width: 56px; height: 56px; border-radius: 50%; padding: 2px; display: flex; align-items: center; justify-content: center; }
         .story-ring.pol { background: linear-gradient(135deg, #2c3e50, #4ca1af); }
         .story-ring.eco { background: linear-gradient(135deg, #11998e, #38ef7d); }
@@ -85,17 +81,57 @@
         .story-ring.cul { background: linear-gradient(135deg, #834d9b, #d04ed6); }
         .story-ring.bank { background: linear-gradient(135deg, #1e3c72, #2a5298); }
         .story-ring.media { background: linear-gradient(135deg, #ff0099, #493240); }
-        
         .story-img { width: 50px; height: 50px; background: #fff; border-radius: 50%; border: 2px solid #fff; display: flex; align-items: center; justify-content: center; font-size: 20px; }
         .story-name { font-size: 10px; margin-top: 4px; font-weight: 600; color: #4b5563; }
-
-        /* Search */
         .search-area { width: 100%; padding: 5px 15px 10px 15px; }
         .search-input { width: 100%; padding: 8px 12px; border-radius: 10px; border: 1px solid #cbd5e0; background: #f8fafc; font-size: 0.9rem; outline: none; transition: 0.3s; }
         .search-input:focus { background: #fff; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.1); }
 
-        /* Layout */
-        .main-layout { max-width: 1400px; margin: var(--header-offset) auto 0; padding: 0 20px; display: grid; grid-template-columns: 1fr 320px; gap: 30px; min-height: 100vh; }
+        /* [플레이어 영역] 상단바(Header)를 덮어버리는 위치 */
+        #stickyPlayer {
+            position: fixed;
+            top: 0; /* 최상단 */
+            left: 0;
+            width: 100%;
+            z-index: 2500; /* 헤더(2000)보다 높게 */
+            background: #000;
+            display: none; /* 초기엔 숨김 */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .player-content-wrapper { max-width: 100%; margin: 0 auto; background: #000; }
+        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; background: #000; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        
+        .player-controls { 
+            background: #111; color: #fff; padding: 10px 15px; 
+            display: flex; justify-content: space-between; align-items: center; 
+            border-bottom: 1px solid #333; 
+        }
+        .player-title { font-weight: bold; font-size: 0.85rem; color: #f1f1f1; display:flex; align-items:center; gap:6px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; max-width: 80%; }
+        .close-player-btn { background: #333; border: none; color: #fff; width:28px; height:28px; border-radius:4px; cursor: pointer; display:flex; align-items:center; justify-content:center; }
+
+        /* Main Layout */
+        .main-layout { 
+            max-width: 1400px; 
+            margin: var(--header-total-height) auto 0; 
+            padding: 20px; 
+            display: grid; 
+            grid-template-columns: 1fr 320px; 
+            gap: 30px; 
+            min-height: 100vh; 
+            transition: margin-top 0.3s;
+        }
+
+        /* 영상 재생 시 본문 위치 조정 (헤더가 가려지므로) */
+        body.video-mode .main-layout {
+            /* 영상 높이 + 컨트롤바 높이 정도 */
+            margin-top: calc(56.25vw + 50px); 
+        }
+        @media (min-width: 800px) {
+            body.video-mode .main-layout { margin-top: 500px; }
+        }
+
         .feed-section { width: 100%; }
         .feed-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
         
@@ -112,7 +148,6 @@
         .card-desc { font-size: 0.9rem; color: #64748b; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.6; }
         .card-actions { margin-top: auto; padding-top: 15px; display: flex; gap: 15px; font-size: 20px; color: #94a3b8; }
 
-        /* Sidebar */
         .sidebar-section { position: relative; }
         .history-box { position: sticky; top: 200px; background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); max-height: calc(100vh - 220px); overflow-y: auto; }
         .history-title { font-weight: 800; font-size: 1rem; margin-bottom: 15px; color: #2c3e50; display: flex; justify-content: space-between; align-items: center; }
@@ -122,31 +157,18 @@
         .h-thumb { width: 80px; height: 45px; border-radius: 6px; object-fit: cover; background: #eee; flex-shrink: 0; }
         .h-info { display: flex; flex-direction: column; justify-content: center; }
         .h-title { font-size: 0.8rem; font-weight: 700; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .h-channel { font-size: 0.7rem; color: #888; margin-top: 2px; }
 
-        /* Player */
-        #fixedPlayer { position: fixed; top: var(--header-offset); left: 0; width: 100%; z-index: 1900; background: rgba(0,0,0,0.8); display: none; transition: top 0.3s; }
-        #fixedPlayer.sticky-top { top: 30px !important; z-index: 2100; background: #000; } 
-        .player-content-wrapper { max-width: 900px; margin: 0 auto; background: #000; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; background: #000; }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-        .player-controls { background: #111; color: #fff; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; }
-        .close-player-btn { background: none; border: none; color: #fff; font-size: 1.3rem; cursor: pointer; }
-
-        /* AI Result */
         .ai-result-box { width: 100%; background: #fff; border-radius: 16px; border: 1px solid #e2e8f0; display: none; overflow: hidden; margin-bottom: 30px; box-shadow: 0 10px 25px rgba(0,0,0, 0.05); }
         .ai-header-area { padding: 12px 15px; background: linear-gradient(to right, #f8fafc, #fff); display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #f1f5f9; }
         .ai-loader { width: 18px; height: 18px; border: 2px solid #eee; border-top: 2px solid var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .ai-image-gen img { width: 100%; height: 280px; object-fit: cover; display: none; }
         .ai-body { padding: 20px; font-size: 1rem; line-height: 1.6; color: #334155; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         .pagination-container { display: flex; justify-content: center; gap: 8px; margin: 30px 0 80px 0; }
         .page-btn { width: 40px; height: 40px; border-radius: 10px; background: #fff; border: 1px solid #cbd5e0; display: flex; align-items: center; justify-content: center; font-weight: 700; cursor: pointer; font-size: 0.9rem; transition: 0.2s; }
-        .page-btn:hover { background: #f1f5f9; }
         .page-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
-        /* [하단 메뉴바 - 5개 항목 균등 배치] */
         .bottom-nav { 
             position: fixed; bottom: 0; width: 100%; height: 60px; 
             background: rgba(255,255,255,0.98); border-top: 1px solid #e2e8f0; 
@@ -154,26 +176,16 @@
             display: flex; justify-content: center; align-items: center; z-index: 9999; 
             box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
         }
-        .nav-inner { 
-            max-width: 100%; width: 100%; 
-            display: flex; justify-content: space-between; 
-            padding: 0 10px;
-        }
-        .nav-item { 
-            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            font-size: 0.65rem; color: #94a3b8; cursor: pointer; transition: 0.2s; 
-            padding: 5px 0;
-            -webkit-tap-highlight-color: transparent;
-        }
+        .nav-inner { width: 100%; display: flex; justify-content: space-between; padding: 0 10px; }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.65rem; color: #94a3b8; cursor: pointer; transition: 0.2s; padding: 5px 0; -webkit-tap-highlight-color: transparent; }
         .nav-item i { font-size: 1.3rem; margin-bottom: 4px; }
         .nav-item:hover { color: var(--accent); }
         .nav-item.active { color: var(--accent); font-weight: 800; }
 
         @media (max-width: 1000px) {
-            .main-layout { grid-template-columns: 1fr; margin-top: var(--header-offset); padding: 0 10px; }
+            .main-layout { grid-template-columns: 1fr; padding: 0 10px; }
             .sidebar-section { display: none; } 
             .feed-grid { grid-template-columns: 1fr; }
-            #fixedPlayer { top: var(--header-offset); }
         }
     </style>
 </head>
@@ -197,7 +209,6 @@
                     <span class="logo-text">News</span>
                     <span class="category-badge">Global</span>
                 </div>
-                
                 <div class="header-actions">
                     <div class="notification-wrap" id="bellIcon" onclick="updateData()">
                         <i class="far fa-bell"></i>
@@ -247,15 +258,19 @@
         </div>
     </header>
 
-    <div id="fixedPlayer">
+    <div id="stickyPlayer">
         <div class="player-content-wrapper">
-            <div class="video-container" id="playerFrameArea"></div>
             <div class="player-controls">
-                <span style="font-size:12px; font-weight:700; color:#fff;" id="nowPlayingText">LIVE NEWS</span>
+                <div class="player-title">
+                    <i class="fas fa-circle" style="color:#e74c3c; font-size:0.6rem; margin-right:5px; animation:blink 1.5s infinite;"></i>
+                    <span id="popupTitle">LIVE NEWS</span>
+                </div>
                 <button class="close-player-btn" onclick="closePlayer()"><i class="fas fa-times"></i></button>
             </div>
+            <div class="video-container" id="playerFrameArea"></div>
         </div>
     </div>
+    <style>@keyframes blink{0%{opacity:1}50%{opacity:0.3}100%{opacity:1}}</style>
 
     <div class="main-layout">
         <main class="feed-section">
@@ -310,11 +325,9 @@
     </div>
 
     <script>
-        // 주소창 가리기 효과를 위한 함수 (페이지 전환 시 히스토리 남기지 않음)
-        function goLink(url) {
-            window.location.replace(url);
-        }
+        function goLink(url) { window.location.replace(url); }
 
+        // [구글 표준 API]
         const YOUTUBE_API_KEY = 'AIzaSyBlKZbCP6qZiv3NLBmgh4iled9Y4BmCUM8'; 
         const API_URL = 'https://www.googleapis.com/youtube/v3/search';
         
@@ -343,7 +356,6 @@
             document.getElementById('aiImageArea').querySelector('img').style.display = 'none';
             document.getElementById('aiTitle').innerText = `Analyzing: '${query}'...`;
             document.getElementById('aiContent').innerText = '';
-            document.getElementById('paginationContainer').innerHTML = '';
         }
 
         function generateAI(query) {
@@ -365,6 +377,7 @@
                 if (data.error) throw new Error(data.error.message);
                 renderFeed(data.items, true); 
             } catch (error) {
+                console.warn("API Error:", error);
                 renderMockData(query);
             }
         }
@@ -444,10 +457,13 @@
                 const snippet = isRealApi ? item.snippet : item.snippet;
                 const card = document.createElement('div');
                 card.className = 'card';
-                card.onclick = () => playVideo(videoId, snippet.title, snippet.channelTitle, snippet.thumbnails.medium.url);
+                card.onclick = () => playPlayer(videoId, snippet.title, snippet.channelTitle, snippet.thumbnails.medium.url);
                 card.innerHTML = `
                     <div class="card-header"><div class="source-name">${snippet.channelTitle}</div></div>
-                    <div class="card-media"><img src="${snippet.thumbnails.medium.url}"><i class="fas fa-play-circle" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:50px; color:rgba(255,255,255,0.9);"></i></div>
+                    <div class="card-media">
+                        <img src="${snippet.thumbnails.medium.url}">
+                        <i class="fas fa-play-circle" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:50px; color:rgba(255,255,255,0.9);"></i>
+                    </div>
                     <div class="card-body"><div class="card-title">${snippet.title}</div><div class="card-desc">${snippet.description}</div></div>
                 `;
                 container.appendChild(card);
@@ -456,15 +472,32 @@
 
         function renderMockData(query) { allData = generateVirtualData(); renderPage(1); }
 
-        function playVideo(videoId, title, channel, thumb) {
-            const player = document.getElementById('fixedPlayer');
+        function playPlayer(videoId, title, channel, thumb) {
+            const player = document.getElementById('stickyPlayer');
+            const frame = document.getElementById('playerFrameArea');
+            
+            document.getElementById('popupTitle').innerText = title ? title.substring(0,30)+"..." : "LIVE NEWS";
+            
+            // 1. 플레이어 활성화 (상단 고정, 헤더 덮음)
             player.style.display = 'block';
-            player.style.top = '185px';
-            document.getElementById('playerFrameArea').innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&playsinline=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+            document.body.classList.add('video-mode'); // 본문 밀기
+            
+            // 2. 스크롤을 맨 위로
             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // 3. 로드
+            frame.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&playsinline=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+            
             saveToHistory({ videoId, title, channel, thumb });
         }
-        function closePlayer() { document.getElementById('fixedPlayer').style.display = 'none'; document.getElementById('playerFrameArea').innerHTML = ''; }
+
+        function closePlayer() { 
+            const player = document.getElementById('stickyPlayer');
+            player.style.display = 'none'; 
+            document.getElementById('playerFrameArea').innerHTML = ''; 
+            document.body.classList.remove('video-mode');
+        }
+        
         function saveToHistory(item) {
             let history = JSON.parse(localStorage.getItem('newsHistory')) || [];
             history = history.filter(h => h.videoId !== item.videoId);
@@ -481,7 +514,7 @@
             history.forEach(h => {
                 const div = document.createElement('div');
                 div.className = 'history-item';
-                div.onclick = () => playVideo(h.videoId);
+                div.onclick = () => playPlayer(h.videoId);
                 div.innerHTML = `<img src="${h.thumb}" class="h-thumb"><div class="h-info"><div class="h-title">${h.title}</div></div>`;
                 container.appendChild(div);
             });
