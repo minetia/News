@@ -3,526 +3,429 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>News Feed</title>
+    <title>InfoGram Global News</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#ffffff">
 
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&family=Noto+Sans+KR:wght@400;700&family=Noto+Sans+SC:wght@400;700&family=Noto+Sans+JP:wght@400;700&family=Noto+Sans+Thai:wght@400;700&family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-color: #f4f6f8;
+            --bg-color: #f8f9fa;
             --card-bg: #ffffff;
-            --text-main: #1a202c;
-            --text-sub: #718096;
-            --accent: #c0392b; 
-            --biz-gradient: linear-gradient(135deg, #c0392b 0%, #8e44ad 100%);
-            --header-total-height: 185px; 
+            --text-main: #212529;
+            --text-sub: #868e96;
+            --accent: #FF6B00; 
+            --header-height: 145px; 
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: 'Outfit', "Noto Sans SC", sans-serif;
+            font-family: 'Outfit', 'Noto Sans KR', 'Noto Sans SC', 'Noto Sans JP', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
-            padding-bottom: 80px; 
+            padding-bottom: 70px;
             overscroll-behavior-y: none;
-            user-select: none;
-            -webkit-user-select: none;
         }
 
         /* [Ticker] */
         .ticker-wrap {
             position: fixed; top: 0; left: 0; width: 100%; height: 30px;
-            background: #1a1a1a; color: #fff; z-index: 2000; /* 헤더와 동일 레벨 */
+            background: #111; color: #fff; z-index: 2000;
             overflow: hidden; line-height: 30px; font-size: 0.8rem;
-            border-bottom: 1px solid #333;
         }
         .ticker { display: inline-block; white-space: nowrap; animation: ticker 40s linear infinite; }
         .ticker-item { display: inline-block; padding: 0 20px; }
-        .badge-breaking { background: #e74c3c; color: white; padding: 2px 5px; border-radius: 3px; font-weight: bold; font-size: 0.7rem; margin-right: 5px; }
-        .up { color: #f87171; } .down { color: #60a5fa; }
+        .up { color: #ff5252; } .down { color: #448aff; }
         @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
         /* [Header] */
         header {
-            position: fixed; top: 30px; left: 0; width: 100%; z-index: 2000;
+            position: fixed; top: 30px; left: 0; width: 100%; z-index: 1900;
             background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid #e2e8f0;
-            display: flex; flex-direction: column; align-items: center;
-            height: 155px;
-            transition: opacity 0.3s;
-        }
-        .header-inner { width: 100%; max-width: 1400px; }
-        .header-top { padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; }
-        .logo-area { display: flex; align-items: center; gap: 6px; cursor: pointer; }
-        .logo-icon { font-size: 1.4rem; background: var(--biz-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .logo-text { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.5px; color: #1a202c; }
-        .category-badge { background: #1a202c; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: bold; text-transform: uppercase; }
-        .header-actions { display: flex; align-items: center; gap: 10px; }
-        .notification-wrap { position: relative; font-size: 20px; color: #374151; cursor: pointer; }
-        .notification-wrap.alert { animation: bellShake 0.5s ease-in-out infinite; color: var(--accent); }
-        .red-dot { position: absolute; top: 0; right: 0; width: 7px; height: 7px; background: var(--accent); border-radius: 50%; border: 1px solid #fff; display: none; }
-        @keyframes bellShake { 0% { transform: rotate(0); } 25% { transform: rotate(15deg); } 50% { transform: rotate(0); } 75% { transform: rotate(-15deg); } 100% { transform: rotate(0); } }
-        .lang-selector { border: 1px solid #cbd5e0; padding: 4px 8px; border-radius: 6px; background: #fff; font-size: 0.75rem; font-weight: 700; color: #374151; cursor: pointer; outline: none; }
-
-        .stories-container { width: 100%; border-bottom: 1px solid #e2e8f0; background: #fff; display: flex; justify-content: center; }
-        .story-scroll-view { width: 100%; max-width: 1400px; overflow-x: auto; white-space: nowrap; -ms-overflow-style: none; scrollbar-width: none; padding: 10px 0; }
-        .story-wrapper { display: inline-flex; gap: 15px; padding: 0 15px; }
-        .story-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.1s; }
-        .story-item:hover { transform: translateY(-3px); }
-        .story-ring { width: 56px; height: 56px; border-radius: 50%; padding: 2px; display: flex; align-items: center; justify-content: center; }
-        .story-ring.pol { background: linear-gradient(135deg, #2c3e50, #4ca1af); }
-        .story-ring.eco { background: linear-gradient(135deg, #11998e, #38ef7d); }
-        .story-ring.war { background: linear-gradient(135deg, #cb2d3e, #ef473a); }
-        .story-ring.cul { background: linear-gradient(135deg, #834d9b, #d04ed6); }
-        .story-ring.bank { background: linear-gradient(135deg, #1e3c72, #2a5298); }
-        .story-ring.media { background: linear-gradient(135deg, #ff0099, #493240); }
-        .story-img { width: 50px; height: 50px; background: #fff; border-radius: 50%; border: 2px solid #fff; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        .story-name { font-size: 10px; margin-top: 4px; font-weight: 600; color: #4b5563; }
-        .search-area { width: 100%; padding: 5px 15px 10px 15px; }
-        .search-input { width: 100%; padding: 8px 12px; border-radius: 10px; border: 1px solid #cbd5e0; background: #f8fafc; font-size: 0.9rem; outline: none; transition: 0.3s; }
-        .search-input:focus { background: #fff; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.1); }
-
-        /* [플레이어 영역] 상단바(Header)를 덮어버리는 위치 */
-        #stickyPlayer {
-            position: fixed;
-            top: 0; /* 최상단 */
-            left: 0;
-            width: 100%;
-            z-index: 2500; /* 헤더(2000)보다 높게 */
-            background: #000;
-            display: none; /* 초기엔 숨김 */
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-bottom: 1px solid #e9ecef;
+            height: 115px; 
+            display: flex; flex-direction: column; justify-content: space-between;
         }
 
-        .player-content-wrapper { max-width: 100%; margin: 0 auto; background: #000; }
-        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; background: #000; }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        .header-top {
+            padding: 10px 15px; 
+            display: flex; align-items: center; gap: 10px;
+        }
         
-        .player-controls { 
-            background: #111; color: #fff; padding: 10px 15px; 
-            display: flex; justify-content: space-between; align-items: center; 
-            border-bottom: 1px solid #333; 
-        }
-        .player-title { font-weight: bold; font-size: 0.85rem; color: #f1f1f1; display:flex; align-items:center; gap:6px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; max-width: 80%; }
-        .close-player-btn { background: #333; border: none; color: #fff; width:28px; height:28px; border-radius:4px; cursor: pointer; display:flex; align-items:center; justify-content:center; }
+        /* [Logo] */
+        .logo-area { display: flex; align-items: center; gap: 2px; cursor: pointer; flex-shrink: 0; }
+        .logo-main { font-size: 1.3rem; font-weight: 900; color: #222; letter-spacing: -0.5px; }
+        .logo-accent { color: var(--accent); } 
+        .logo-sub { font-size: 1.3rem; font-weight: 300; color: #555; }
 
-        /* Main Layout */
-        .main-layout { 
-            max-width: 1400px; 
-            margin: var(--header-total-height) auto 0; 
-            padding: 20px; 
-            display: grid; 
-            grid-template-columns: 1fr 320px; 
-            gap: 30px; 
-            min-height: 100vh; 
-            transition: margin-top 0.3s;
+        /* [Search Wrapper] */
+        .search-wrapper {
+            flex: 1; display: flex; align-items: center;
+            background: #f1f3f5; 
+            border-radius: 20px; 
+            border: 1px solid #ced4da;
+            padding: 0 5px 0 10px; 
+            height: 40px;
+            overflow: hidden; 
         }
 
-        /* 영상 재생 시 본문 위치 조정 (헤더가 가려지므로) */
-        body.video-mode .main-layout {
-            /* 영상 높이 + 컨트롤바 높이 정도 */
-            margin-top: calc(56.25vw + 50px); 
-        }
-        @media (min-width: 800px) {
-            body.video-mode .main-layout { margin-top: 500px; }
+        .lang-select {
+            border: none; background: transparent; font-size: 0.9rem; font-weight: 600;
+            color: #333; outline: none; padding-right: 5px; cursor: pointer;
+            border-right: 1px solid #ddd; height: 24px; margin-right: 8px;
+            font-family: "Noto Color Emoji", sans-serif; /* 이모지 지원 */
         }
 
-        .feed-section { width: 100%; }
-        .feed-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
+        .search-input {
+            flex: 1; border: none; background: transparent;
+            padding: 0; font-size: 0.9rem; outline: none;
+            color: #333; min-width: 0; 
+        }
+
+        .search-btn { 
+            border: none; background: var(--accent); color: #fff; 
+            width: 32px; height: 32px; border-radius: 50%; 
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer; margin-left: 5px;
+        }
+        .search-btn i { font-size: 0.9rem; }
+
+        /* [Menu Scroller] */
+        .nav-scroller {
+            width: 100%; overflow-x: auto; white-space: nowrap;
+            padding: 0 15px 10px 15px; scrollbar-width: none;
+        }
+        .nav-scroller::-webkit-scrollbar { display: none; }
+        .nav-chips { display: inline-flex; gap: 8px; }
+        .chip {
+            padding: 6px 14px; border-radius: 20px; background: #fff;
+            border: 1px solid #dee2e6; color: #495057; font-size: 0.85rem; font-weight: 600;
+            cursor: pointer; transition: 0.2s;
+        }
+        .chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+
+        /* [Video Player] */
+        #video-container {
+            margin-top: 145px; width: 100%; background: #000;
+            display: none; z-index: 3000;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        #video-container.sticky {
+            position: fixed; top: 0; left: 0; width: 100%; margin-top: 0;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        .video-frame-wrap { position: relative; width: 100%; padding-bottom: 56.25%; }
+        .video-frame-wrap iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
         
-        .card { background: var(--card-bg); border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; overflow: hidden; height: 100%; display: flex; flex-direction: column; transition: transform 0.3s; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
-        .card-header { padding: 12px 15px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #f1f5f9; }
-        .source-icon { width: 32px; height: 32px; border-radius: 8px; background: #333; object-fit: cover; }
-        .source-name { font-weight: 700; font-size: 13px; color: #555; text-transform: uppercase; }
-        .card-media { width: 100%; aspect-ratio: 16/9; background: #000; position: relative; }
-        .card-media img { width: 100%; height: 100%; object-fit: cover; opacity: 0.95; }
-        .category-tag { position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.7); color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; }
-        .card-body { padding: 15px; flex: 1; display: flex; flex-direction: column; }
-        .card-title { font-weight: 800; font-size: 1.1rem; margin-bottom: 8px; line-height: 1.4; color: #1a202c; }
-        .card-desc { font-size: 0.9rem; color: #64748b; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.6; }
-        .card-actions { margin-top: auto; padding-top: 15px; display: flex; gap: 15px; font-size: 20px; color: #94a3b8; }
-
-        .sidebar-section { position: relative; }
-        .history-box { position: sticky; top: 200px; background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); max-height: calc(100vh - 220px); overflow-y: auto; }
-        .history-title { font-weight: 800; font-size: 1rem; margin-bottom: 15px; color: #2c3e50; display: flex; justify-content: space-between; align-items: center; }
-        .clear-btn { font-size: 0.75rem; color: #ef4444; cursor: pointer; }
-        .history-item { display: flex; gap: 10px; margin-bottom: 15px; cursor: pointer; transition: 0.2s; }
-        .history-item:hover { opacity: 0.7; }
-        .h-thumb { width: 80px; height: 45px; border-radius: 6px; object-fit: cover; background: #eee; flex-shrink: 0; }
-        .h-info { display: flex; flex-direction: column; justify-content: center; }
-        .h-title { font-size: 0.8rem; font-weight: 700; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-
-        .ai-result-box { width: 100%; background: #fff; border-radius: 16px; border: 1px solid #e2e8f0; display: none; overflow: hidden; margin-bottom: 30px; box-shadow: 0 10px 25px rgba(0,0,0, 0.05); }
-        .ai-header-area { padding: 12px 15px; background: linear-gradient(to right, #f8fafc, #fff); display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #f1f5f9; }
-        .ai-loader { width: 18px; height: 18px; border: 2px solid #eee; border-top: 2px solid var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
-        .ai-image-gen img { width: 100%; height: 280px; object-fit: cover; display: none; }
-        .ai-body { padding: 20px; font-size: 1rem; line-height: 1.6; color: #334155; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        .pagination-container { display: flex; justify-content: center; gap: 8px; margin: 30px 0 80px 0; }
-        .page-btn { width: 40px; height: 40px; border-radius: 10px; background: #fff; border: 1px solid #cbd5e0; display: flex; align-items: center; justify-content: center; font-weight: 700; cursor: pointer; font-size: 0.9rem; transition: 0.2s; }
-        .page-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-
-        .bottom-nav { 
-            position: fixed; bottom: 0; width: 100%; height: 60px; 
-            background: rgba(255,255,255,0.98); border-top: 1px solid #e2e8f0; 
-            backdrop-filter: blur(10px); 
-            display: flex; justify-content: center; align-items: center; z-index: 9999; 
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        .player-ctrl {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 15px; background: #222; color: #fff;
         }
-        .nav-inner { width: 100%; display: flex; justify-content: space-between; padding: 0 10px; }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.65rem; color: #94a3b8; cursor: pointer; transition: 0.2s; padding: 5px 0; -webkit-tap-highlight-color: transparent; }
-        .nav-item i { font-size: 1.3rem; margin-bottom: 4px; }
-        .nav-item:hover { color: var(--accent); }
-        .nav-item.active { color: var(--accent); font-weight: 800; }
+        .video-info-text { font-size: 0.85rem; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 80%; }
+        .close-btn { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; }
 
-        @media (max-width: 1000px) {
-            .main-layout { grid-template-columns: 1fr; padding: 0 10px; }
-            .sidebar-section { display: none; } 
-            .feed-grid { grid-template-columns: 1fr; }
+
+        /* [Main Feed] */
+        .content-area {
+            max-width: 800px; margin: 0 auto; padding: 20px 15px;
+            margin-top: 145px; 
         }
+        .content-area.has-video { margin-top: 0; }
+
+        .news-card {
+            background: var(--card-bg); border-radius: 12px; overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px;
+            cursor: pointer; border: 1px solid #f1f3f5;
+        }
+        .thumb-box { position: relative; width: 100%; aspect-ratio: 16/9; }
+        .thumb-img { width: 100%; height: 100%; object-fit: cover; }
+        .play-icon-overlay {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 3rem; color: rgba(255,255,255,0.8); pointer-events: none;
+        }
+        .card-body { padding: 15px; }
+        .card-title { font-size: 1rem; font-weight: 700; margin-bottom: 8px; line-height: 1.4; color: #212529; }
+        .card-meta { font-size: 0.75rem; color: #868e96; display: flex; justify-content: space-between; }
+
+
+        /* [Bottom Nav] */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 60px;
+            background: #fff; border-top: 1px solid #e9ecef;
+            display: flex; justify-content: space-around; align-items: center;
+            z-index: 4000;
+        }
+        .bn-item { display: flex; flex-direction: column; align-items: center; color: #adb5bd; font-size: 0.7rem; cursor: pointer; }
+        .bn-item i { font-size: 1.3rem; margin-bottom: 3px; }
+        .bn-item.active { color: var(--accent); font-weight: bold; }
+
     </style>
 </head>
 <body>
 
     <div class="ticker-wrap">
         <div class="ticker">
-            <span class="ticker-item"><span class="badge-breaking">BREAKING</span> 우크라이나 평화 협상 난항 지속</span>
-            <span class="ticker-item"><span class="badge-breaking">ECONOMY</span> 미 연준, 기준금리 동결 시사</span>
-            <span class="ticker-item">NASDAQ <span class="up">▲ 1.2%</span></span>
-            <span class="ticker-item">BTC <span class="down">▼ 0.5%</span></span>
-            <span class="ticker-item">USD/KRW <span class="down">▼ 1,320.50</span></span>
+            <span class="ticker-item">NASDAQ <span class="up">▲1.2%</span></span>
+            <span class="ticker-item">BTC <span class="up">▲$98,400</span></span>
+            <span class="ticker-item">ETH <span class="down">▼$3,200</span></span>
+            <span class="ticker-item">USD/KRW <span class="up">▲1,320</span></span>
         </div>
     </div>
 
     <header id="mainHeader">
-        <div class="header-inner">
-            <div class="header-top">
-                <div class="logo-area" onclick="goLink('https://minetia.github.io/News/')">
-                    <i class="fas fa-newspaper logo-icon"></i>
-                    <span class="logo-text">News</span>
-                    <span class="category-badge">Global</span>
-                </div>
-                <div class="header-actions">
-                    <div class="notification-wrap" id="bellIcon" onclick="updateData()">
-                        <i class="far fa-bell"></i>
-                        <div class="red-dot" id="notiDot"></div>
-                    </div>
-                    <select class="lang-selector" id="langSelect" onchange="changeLanguage()">
-                        <option value="ko">KR</option>
-                        <option value="en">EN</option>
-                    </select>
-                </div>
+        <div class="header-top">
+            <div class="logo-area" onclick="location.reload()">
+                <span class="logo-main"><span class="logo-accent">Info</span>Gram</span>
+                <span class="logo-sub">News</span>
             </div>
             
-            <div class="stories-container">
-                <div class="story-scroll-view">
-                    <div class="story-wrapper">
-                        <div class="story-item" onclick="filterCategory('Politics')">
-                            <div class="story-ring pol"><div class="story-img">🏛️</div></div>
-                            <div class="story-name">정치</div>
-                        </div>
-                        <div class="story-item" onclick="filterCategory('Economy')">
-                            <div class="story-ring eco"><div class="story-img">📉</div></div>
-                            <div class="story-name">경제</div>
-                        </div>
-                        <div class="story-item" onclick="filterCategory('War')">
-                            <div class="story-ring war"><div class="story-img">🌍</div></div>
-                            <div class="story-name">국제/전쟁</div>
-                        </div>
-                        <div class="story-item" onclick="filterCategory('Culture')">
-                            <div class="story-ring cul"><div class="story-img">🎨</div></div>
-                            <div class="story-name">문화/예술</div>
-                        </div>
-                        <div class="story-item" onclick="filterCategory('Bank')">
-                            <div class="story-ring bank"><div class="story-img">🏦</div></div>
-                            <div class="story-name">금융</div>
-                        </div>
-                        <div class="story-item" onclick="filterCategory('Media')">
-                            <div class="story-ring media"><div class="story-img">🎬</div></div>
-                            <div class="story-name">미디어</div>
-                        </div>
-                    </div>
-                </div>
+            <div class="search-wrapper">
+                <select class="lang-select" id="langSelect" onchange="changeCountry()">
+                    <option value="KR">🇰🇷 KR</option>
+                    <option value="US">🇺🇸 EN</option>
+                    <option value="JP">🇯🇵 JP</option>
+                    <option value="CN">🇨🇳 CN</option>
+                    <option value="VN">🇻🇳 VN</option>
+                    <option value="TH">🇹🇭 TH</option>
+                    <option value="ID">🇮🇩 ID</option>
+                    <option value="IN">🇮🇳 IN</option>
+                    <option value="FR">🇫🇷 FR</option>
+                    <option value="DE">🇩🇪 DE</option>
+                    <option value="ES">🇪🇸 ES</option>
+                    <option value="PT">🇧🇷 PT</option>
+                    <option value="RU">🇷🇺 RU</option>
+                    <option value="SA">🇸🇦 SA</option>
+                </select>
+                <input type="text" class="search-input" id="searchInput" placeholder="검색..." onkeyup="handleSearch(event)">
+                <button class="search-btn" onclick="triggerSearch()"><i class="fas fa-search"></i></button>
             </div>
-
-            <div class="search-area">
-                <input type="text" class="search-input" id="searchInput" placeholder="뉴스, 정치, 경제 키워드 검색..." onkeyup="handleSearch(event)">
-            </div>
+        </div>
+        
+        <div class="nav-scroller">
+            <div class="nav-chips" id="menuList"></div>
         </div>
     </header>
 
-    <div id="stickyPlayer">
-        <div class="player-content-wrapper">
-            <div class="player-controls">
-                <div class="player-title">
-                    <i class="fas fa-circle" style="color:#e74c3c; font-size:0.6rem; margin-right:5px; animation:blink 1.5s infinite;"></i>
-                    <span id="popupTitle">LIVE NEWS</span>
-                </div>
-                <button class="close-player-btn" onclick="closePlayer()"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="video-container" id="playerFrameArea"></div>
+    <div id="video-container">
+        <div class="video-frame-wrap" id="playerFrameArea"></div>
+        <div class="player-ctrl">
+            <span class="video-info-text" id="playingTitle">Playing...</span>
+            <button class="close-btn" onclick="closePlayer()"><i class="fas fa-times"></i></button>
         </div>
     </div>
-    <style>@keyframes blink{0%{opacity:1}50%{opacity:0.3}100%{opacity:1}}</style>
 
-    <div class="main-layout">
-        <main class="feed-section">
-            <div id="aiResult" class="ai-result-box">
-                <div class="ai-header-area">
-                    <div class="ai-loader" id="aiLoader"></div>
-                    <span style="font-weight:700; color:#c0392b; font-size:0.9rem;" id="aiTitle">AI Analysis...</span>
-                </div>
-                <div class="ai-image-gen" id="aiImageArea">
-                    <img id="aiGeneratedImg" src="" alt="AI Gen">
-                </div>
-                <div class="ai-body" id="aiContent"></div>
-            </div>
-            <div class="feed-grid" id="feedContainer"></div>
-            <div class="pagination-container" id="paginationContainer"></div>
-        </main>
-
-        <aside class="sidebar-section">
-            <div class="history-box">
-                <div class="history-title">
-                    <span>🕒 Recent News</span>
-                    <span class="clear-btn" onclick="clearHistory()">Clear</span>
-                </div>
-                <div id="historyList"><div class="empty-history">기록 없음</div></div>
-            </div>
-        </aside>
+    <div class="content-area" id="mainFeed">
+        <div id="feedList"></div>
     </div>
 
     <div class="bottom-nav">
-        <div class="nav-inner">
-            <div class="nav-item" onclick="goLink('https://minetia.github.io/Home/')">
-                <i class="fas fa-home"></i>
-                <span>홈</span>
-            </div>
-            <div class="nav-item" onclick="goLink('https://minetia.github.io/business/')">
-                <i class="fas fa-briefcase"></i>
-                <span>비즈니스</span>
-            </div>
-            <div class="nav-item" onclick="goLink('https://minetia.github.io/tech/')">
-                <i class="fas fa-microchip"></i>
-                <span>테크</span>
-            </div>
-            <div class="nav-item" onclick="goLink('https://minetia.github.io/coin/')">
-                <i class="fab fa-bitcoin"></i>
-                <span>코인</span>
-            </div>
-            <div class="nav-item active" onclick="goLink('https://minetia.github.io/News/')">
-                <i class="fas fa-newspaper"></i>
-                <span>뉴스</span>
-            </div>
-        </div>
+        <div class="bn-item" onclick="goLink('https://minetia.github.io/Home/')"><i class="fas fa-home"></i>홈</div>
+        <div class="bn-item" onclick="goLink('https://minetia.github.io/business/')"><i class="fas fa-briefcase"></i>비즈니스</div>
+        <div class="bn-item" onclick="goLink('https://minetia.github.io/tech/')"><i class="fas fa-microchip"></i>테크</div>
+        <div class="bn-item" onclick="goLink('https://minetia.github.io/coin/')"><i class="fab fa-bitcoin"></i>코인</div>
+        <div class="bn-item active" onclick="goLink('https://minetia.github.io/News/')"><i class="fas fa-newspaper"></i>뉴스</div>
     </div>
 
     <script>
         function goLink(url) { window.location.replace(url); }
 
-        // [구글 표준 API]
         const YOUTUBE_API_KEY = 'AIzaSyBlKZbCP6qZiv3NLBmgh4iled9Y4BmCUM8'; 
         const API_URL = 'https://www.googleapis.com/youtube/v3/search';
         
-        const TOTAL_ITEMS = 60;
-        const ITEMS_PER_PAGE = 12; 
-        let allData = [];
-        let currentPage = 1;
-        let currentLang = 'ko'; 
+        let isPlayerActive = false;
+        let currentCountry = 'KR';
 
-        async function handleSearch(e) {
-            if (e.key === 'Enter') {
-                const query = document.getElementById('searchInput').value;
-                if (!query) return;
-                closePlayer();
-                document.getElementById('aiResult').style.display = 'block';
-                resetAI(query);
-                generateAI(query);
-                await searchYouTubeReal(query);
+        // [글로벌 언어팩 데이터]
+        const countryData = {
+            KR: {
+                region: 'KR', suffix: ' 뉴스', placeholder: '검색...',
+                menus: [ {name:'전체', q:'뉴스'}, {name:'정치', q:'정치'}, {name:'경제', q:'경제'}, {name:'사회', q:'사회'}, {name:'IT', q:'IT 기술'}, {name:'코인', q:'가상화폐'} ]
+            },
+            US: {
+                region: 'US', suffix: ' News', placeholder: 'Search...',
+                menus: [ {name:'All', q:'News'}, {name:'Politics', q:'Politics'}, {name:'Economy', q:'Economy'}, {name:'Tech', q:'Technology'}, {name:'Crypto', q:'Crypto'}, {name:'World', q:'World News'} ]
+            },
+            JP: {
+                region: 'JP', suffix: ' ニュース', placeholder: '検索...',
+                menus: [ {name:'総合', q:'ニュース'}, {name:'政治', q:'政治'}, {name:'経済', q:'経済'}, {name:'IT', q:'IT'}, {name:'仮想通貨', q:'仮想通貨'}, {name:'国際', q:'国際ニュース'} ]
+            },
+            CN: {
+                region: 'TW', suffix: ' 新聞', placeholder: '搜索...',
+                menus: [ {name:'頭條', q:'新聞'}, {name:'政治', q:'政治'}, {name:'財經', q:'財經'}, {name:'科技', q:'科技'}, {name:'比特幣', q:'加密貨幣'}, {name:'國際', q:'國際新聞'} ]
+            },
+            VN: {
+                region: 'VN', suffix: ' Tin tức', placeholder: 'Tìm kiếm...',
+                menus: [ {name:'Toàn cảnh', q:'Tin tức'}, {name:'Chính trị', q:'Chính trị'}, {name:'Kinh tế', q:'Kinh tế'}, {name:'Công nghệ', q:'Công nghệ'}, {name:'Thế giới', q:'Thế giới'} ]
+            },
+            TH: {
+                region: 'TH', suffix: ' ข่าว', placeholder: 'ค้นหา...',
+                menus: [ {name:'ทั้งหมด', q:'ข่าว'}, {name:'การเมือง', q:'การเมือง'}, {name:'เศรษฐกิจ', q:'เศรษฐกิจ'}, {name:'เทคโนโลยี', q:'เทคโนโลยี'}, {name:'ต่างประเทศ', q:'ข่าวต่างประเทศ'} ]
+            },
+            ID: {
+                region: 'ID', suffix: ' Berita', placeholder: 'Cari...',
+                menus: [ {name:'Utama', q:'Berita'}, {name:'Politik', q:'Politik'}, {name:'Ekonomi', q:'Ekonomi'}, {name:'Teknologi', q:'Teknologi'}, {name:'Dunia', q:'Berita Dunia'} ]
+            },
+            IN: {
+                region: 'IN', suffix: ' News', placeholder: 'Search...',
+                menus: [ {name:'All', q:'India News'}, {name:'Politics', q:'Indian Politics'}, {name:'Bollywood', q:'Bollywood'}, {name:'Cricket', q:'Cricket'}, {name:'Tech', q:'Technology'} ]
+            },
+            FR: {
+                region: 'FR', suffix: ' Actualités', placeholder: 'Rechercher...',
+                menus: [ {name:'La Une', q:'Actualités'}, {name:'Politique', q:'Politique'}, {name:'Économie', q:'Économie'}, {name:'Tech', q:'Technologie'}, {name:'Monde', q:'Monde'} ]
+            },
+            DE: {
+                region: 'DE', suffix: ' Nachrichten', placeholder: 'Suchen...',
+                menus: [ {name:'Aktuell', q:'Nachrichten'}, {name:'Politik', q:'Politik'}, {name:'Wirtschaft', q:'Wirtschaft'}, {name:'Tech', q:'Technologie'}, {name:'Welt', q:'Weltnachrichten'} ]
+            },
+            ES: {
+                region: 'ES', suffix: ' Noticias', placeholder: 'Buscar...',
+                menus: [ {name:'Todo', q:'Noticias'}, {name:'Política', q:'Política'}, {name:'Economía', q:'Economía'}, {name:'Tecnología', q:'Tecnología'}, {name:'Mundo', q:'Noticias del Mundo'} ]
+            },
+            PT: {
+                region: 'BR', suffix: ' Notícias', placeholder: 'Pesquisar...',
+                menus: [ {name:'Geral', q:'Notícias'}, {name:'Política', q:'Política'}, {name:'Economia', q:'Economia'}, {name:'Tecnologia', q:'Tecnologia'}, {name:'Mundo', q:'Mundo'} ]
+            },
+            RU: {
+                region: 'RU', suffix: ' Новости', placeholder: 'Поиск...',
+                menus: [ {name:'Главное', q:'Новости'}, {name:'Политика', q:'Политика'}, {name:'Экономика', q:'Экономика'}, {name:'Технологии', q:'Технологии'}, {name:'Мир', q:'Мировые новости'} ]
+            },
+            SA: {
+                region: 'SA', suffix: ' أخبار', placeholder: 'بحث...',
+                menus: [ {name:'الرئيسية', q:'أخبار'}, {name:'سياسة', q:'سياسة'}, {name:'اقتصاد', q:'اقتصاد'}, {name:'تكنولوجيا', q:'تكنولوجيا'}, {name:'عالمي', q:'أخبار عالمية'} ]
             }
+        };
+
+        window.onload = () => {
+            changeCountry();
+        };
+
+        function changeCountry() {
+            const select = document.getElementById('langSelect');
+            currentCountry = select.value;
+            const data = countryData[currentCountry];
+            
+            document.getElementById('searchInput').placeholder = data.placeholder;
+
+            const container = document.getElementById('menuList');
+            container.innerHTML = '';
+            
+            data.menus.forEach((item, idx) => {
+                const chip = document.createElement('div');
+                chip.className = `chip ${idx===0 ? 'active':''}`;
+                chip.innerText = item.name;
+                chip.onclick = () => filterCategory(item.q, chip);
+                container.appendChild(chip);
+            });
+            
+            filterCategory(data.menus[0].q, document.querySelector('.chip'));
         }
 
-        function resetAI(query) {
-            const box = document.getElementById('aiResult');
-            box.style.display = 'block';
-            document.getElementById('aiLoader').style.display = 'block';
-            document.getElementById('aiImageArea').querySelector('img').style.display = 'none';
-            document.getElementById('aiTitle').innerText = `Analyzing: '${query}'...`;
-            document.getElementById('aiContent').innerText = '';
+        function handleSearch(e) {
+            if (e.key === 'Enter') triggerSearch();
+        }
+        function triggerSearch() {
+            const query = document.getElementById('searchInput').value;
+            if(query) searchYouTube(query);
         }
 
-        function generateAI(query) {
-            const imgTag = document.getElementById('aiGeneratedImg');
-            imgTag.src = `https://image.pollinations.ai/prompt/${encodeURIComponent(query + " news realistic")}`;
-            imgTag.onload = () => { imgTag.style.display = 'block'; };
-            setTimeout(() => {
-                document.getElementById('aiLoader').style.display = 'none';
-                document.getElementById('aiTitle').innerText = `AI Insight: ${query}`;
-                document.getElementById('aiContent').innerHTML = `<strong>📰 AI 분석</strong><br>"${query}" 관련 보도가 증가하고 있습니다.`;
-            }, 1500);
+        function filterCategory(keyword, el) {
+            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            if(el) el.classList.add('active');
+            
+            const data = countryData[currentCountry];
+            searchYouTube(keyword + data.suffix);
         }
 
-        async function searchYouTubeReal(query) {
+        async function searchYouTube(query) {
             try {
-                const url = `${API_URL}?part=snippet&maxResults=12&q=${encodeURIComponent(query + " news")}&type=video&key=${YOUTUBE_API_KEY}`;
+                const dataConfig = countryData[currentCountry];
+                // 검색 정확도 향상을 위해 relevance 정렬 사용 가능 (현재는 기본값)
+                const url = `${API_URL}?part=snippet&maxResults=15&q=${encodeURIComponent(query)}&type=video&regionCode=${dataConfig.region}&key=${YOUTUBE_API_KEY}`;
+                
                 const response = await fetch(url);
                 const data = await response.json();
-                if (data.error) throw new Error(data.error.message);
-                renderFeed(data.items, true); 
-            } catch (error) {
-                console.warn("API Error:", error);
-                renderMockData(query);
+                if (data.items) renderFeed(data.items);
+            } catch (e) {
+                console.error(e);
             }
         }
 
-        function generateVirtualData() {
-            const categories = ['Politics', 'Economy', 'War', 'Culture', 'Bank', 'Media'];
-            const topics = {
-                ko: ['[정치] 대통령 순방', '[경제] 금리 동결', '[전쟁] 국제 정세', '[문화] K-POP 열풍', '[금융] 은행 금리', '[미디어] OTT 경쟁']
-            };
-            const channels = ['YTN', 'CNN', 'BBC', 'Bloomberg', 'Reuters'];
-            const generated = [];
-            for (let i = 1; i <= TOTAL_ITEMS; i++) {
-                const topic = topics.ko[Math.floor(Math.random() * topics.ko.length)];
-                const channel = channels[Math.floor(Math.random() * channels.length)];
-                const cat = categories[Math.floor(Math.random() * categories.length)];
-                generated.push({
-                    videoId: 'HK6y8DAPN_0', category: cat,
-                    snippet: {
-                        title: topic + ' #' + i, description: 'Breaking News',
-                        thumbnails: { medium: { url: `https://picsum.photos/600/400?random=${i + 500}` } },
-                        channelTitle: channel, publishedAt: new Date().toISOString()
-                    }
-                });
-            }
-            return generated;
-        }
-
-        function filterCategory(cat) {
-            document.getElementById('searchInput').value = cat;
-            handleSearch({key: 'Enter'});
-        }
-
-        function initData() {
-            allData = generateVirtualData();
-            renderPage(1);
-            showNotification();
-            loadHistory();
-        }
-
-        function changeLanguage() { updateData(); }
-        function updateData() {
-            document.getElementById('bellIcon').classList.remove('alert');
-            document.getElementById('notiDot').style.display = 'none';
-            setTimeout(() => { allData = generateVirtualData(); renderPage(1); }, 600);
-        }
-        function showNotification() {
-            document.getElementById('bellIcon').classList.add('alert');
-            document.getElementById('notiDot').style.display = 'block';
-        }
-
-        function renderPage(page) {
-            currentPage = page;
-            const start = (page - 1) * ITEMS_PER_PAGE;
-            const end = start + ITEMS_PER_PAGE;
-            renderFeed(allData.slice(start, end), false);
-            renderPaginationBtns();
-        }
-
-        function renderPaginationBtns() {
-            const container = document.getElementById('paginationContainer');
-            container.innerHTML = '';
-            const totalPages = Math.ceil(allData.length / ITEMS_PER_PAGE);
-            for (let i = 1; i <= totalPages; i++) {
-                const btn = document.createElement('div');
-                btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
-                btn.innerText = i;
-                btn.onclick = () => { renderPage(i); window.scrollTo({ top: 0, behavior: 'smooth' }); };
-                container.appendChild(btn);
-            }
-        }
-
-        function renderFeed(items, isRealApi = false) {
-            const container = document.getElementById('feedContainer');
-            container.innerHTML = ''; 
+        function renderFeed(items) {
+            const list = document.getElementById('feedList');
+            list.innerHTML = '';
             items.forEach(item => {
-                const videoId = isRealApi ? item.id.videoId : item.videoId;
-                const snippet = isRealApi ? item.snippet : item.snippet;
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.onclick = () => playPlayer(videoId, snippet.title, snippet.channelTitle, snippet.thumbnails.medium.url);
-                card.innerHTML = `
-                    <div class="card-header"><div class="source-name">${snippet.channelTitle}</div></div>
-                    <div class="card-media">
-                        <img src="${snippet.thumbnails.medium.url}">
-                        <i class="fas fa-play-circle" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:50px; color:rgba(255,255,255,0.9);"></i>
-                    </div>
-                    <div class="card-body"><div class="card-title">${snippet.title}</div><div class="card-desc">${snippet.description}</div></div>
-                `;
-                container.appendChild(card);
-            });
-        }
+                const snip = item.snippet;
+                const vid = item.id.videoId;
+                const thumb = snip.thumbnails.high ? snip.thumbnails.high.url : snip.thumbnails.medium.url;
 
-        function renderMockData(query) { allData = generateVirtualData(); renderPage(1); }
-
-        function playPlayer(videoId, title, channel, thumb) {
-            const player = document.getElementById('stickyPlayer');
-            const frame = document.getElementById('playerFrameArea');
-            
-            document.getElementById('popupTitle').innerText = title ? title.substring(0,30)+"..." : "LIVE NEWS";
-            
-            // 1. 플레이어 활성화 (상단 고정, 헤더 덮음)
-            player.style.display = 'block';
-            document.body.classList.add('video-mode'); // 본문 밀기
-            
-            // 2. 스크롤을 맨 위로
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            // 3. 로드
-            frame.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&playsinline=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-            
-            saveToHistory({ videoId, title, channel, thumb });
-        }
-
-        function closePlayer() { 
-            const player = document.getElementById('stickyPlayer');
-            player.style.display = 'none'; 
-            document.getElementById('playerFrameArea').innerHTML = ''; 
-            document.body.classList.remove('video-mode');
-        }
-        
-        function saveToHistory(item) {
-            let history = JSON.parse(localStorage.getItem('newsHistory')) || [];
-            history = history.filter(h => h.videoId !== item.videoId);
-            history.unshift(item);
-            if(history.length > 20) history.pop();
-            localStorage.setItem('newsHistory', JSON.stringify(history));
-            renderHistory();
-        }
-        function renderHistory() {
-            const history = JSON.parse(localStorage.getItem('newsHistory')) || [];
-            const container = document.getElementById('historyList');
-            container.innerHTML = '';
-            if (history.length === 0) { container.innerHTML = '<div class="empty-history">기록 없음</div>'; return; }
-            history.forEach(h => {
                 const div = document.createElement('div');
-                div.className = 'history-item';
-                div.onclick = () => playPlayer(h.videoId);
-                div.innerHTML = `<img src="${h.thumb}" class="h-thumb"><div class="h-info"><div class="h-title">${h.title}</div></div>`;
-                container.appendChild(div);
+                div.className = 'news-card';
+                div.onclick = () => playVideo(vid, snip.title);
+                div.innerHTML = `
+                    <div class="thumb-box">
+                        <img src="${thumb}" class="thumb-img">
+                        <div class="play-icon-overlay"><i class="fas fa-play-circle"></i></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">${snip.title}</div>
+                        <div class="card-meta">
+                            <span>${snip.channelTitle}</span>
+                            <span>${snip.publishTime.substring(0,10)}</span>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(div);
             });
         }
-        function clearHistory() { localStorage.removeItem('newsHistory'); renderHistory(); }
-        function loadHistory() { renderHistory(); }
-        setInterval(() => { initData(); }, 43200000);
-        initData();
+
+        // [플레이어 가속]
+        function playVideo(vid, title) {
+            const playerBox = document.getElementById('video-container');
+            const frameArea = document.getElementById('playerFrameArea');
+            const contentArea = document.getElementById('mainFeed');
+
+            isPlayerActive = true;
+            document.getElementById('playingTitle').innerText = title;
+            playerBox.style.display = 'block';
+
+            frameArea.innerHTML = `<iframe 
+                src="https://www.youtube.com/embed/${vid}?autoplay=1&playsinline=1&controls=1&rel=0" 
+                title="YouTube video player" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>`;
+
+            contentArea.classList.add('has-video');
+            contentArea.style.marginTop = '0';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function closePlayer() {
+            isPlayerActive = false;
+            const playerBox = document.getElementById('video-container');
+            const contentArea = document.getElementById('mainFeed');
+
+            playerBox.style.display = 'none';
+            playerBox.classList.remove('sticky');
+            document.getElementById('playerFrameArea').innerHTML = '';
+
+            contentArea.classList.remove('has-video');
+            contentArea.style.marginTop = '145px';
+        }
+
+        window.addEventListener('scroll', () => {
+            if (!isPlayerActive) return;
+            const playerBox = document.getElementById('video-container');
+            if (window.scrollY > 50) {
+                playerBox.classList.add('sticky');
+            } else {
+                playerBox.classList.remove('sticky');
+            }
+        });
     </script>
 </body>
 </html>
